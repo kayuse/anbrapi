@@ -12,7 +12,7 @@ const encryption = new Encryption({
 const username: string = encryption.decrypt(env.get('SMTP_USERNAME', '')) as string
 const password: string = encryption.decrypt(env.get('SMTP_PASSWORD', '')) as string
 
-
+console.log(username,'username')
 const mailConfig = defineConfig({
   default: 'smtp',
 
