@@ -18,6 +18,7 @@ export default class extends BaseSchema {
     })
     this.schema.alterTable(this.bibleStudyGroups, (table) => {
       table.dropColumn('attendant')
+      //sss
     })
   }
 }
