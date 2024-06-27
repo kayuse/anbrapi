@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f6f6f6;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      text-align: center;
+      padding: 20px 0;
+      background-color: #007bff;
+      color: #ffffff;
+    }
+    .header h1 {
+      margin: 0;
+    }
+    .content {
+      padding: 20px;
+    }
+    .content p {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #333333;
+    }
+    .details {
+      margin: 20px 0;
+    }
+    .details th,
+    .details td {
+      padding: 8px 12px;
+      text-align: left;
+    }
+    .details th {
+      background-color: #f2f2f2;
+    }
+    .footer {
+      text-align: center;
+      padding: 10px 0;
+      font-size: 14px;
+      color: #777777;
+      background-color: #f6f6f6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Registration Successful!</h1>
+    </div>
+    <div class="content">
+      <p>Hi {{ firstname }},</p>
+      <p>Thank you for registering for ANBR 2024(THE HOLY SPIRIT). Here are your registration details:</p>
+      <table class="details">
+        <tr>
+          <th>Name</th>
+          <td>{{ firstname }} {{lastname}}</td>
+        </tr>
+        <tr>
+          <th>Email</th>
+          <td>{{ email }}</td>
+        </tr>
+        <tr>
+          <th>Registration ID</th>
+          <td>{{ registration_id }}</td>
+        </tr>
+        <tr>
+          <th>BibleStudy Workshop </th>
+          <td>{{ biblestudy_id }}</td>
+        </tr>
+        <!-- Add more details as needed -->
+      </table>
+      <p>If you have any questions, feel free to contact our support team.</p>
+      <p>Best regards,<br>ThreshingHouse Team</p>
+    </div>
+    <div class="footer">
+      <p>&copy; 2024 ThreshingHouse. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
