@@ -60,12 +60,13 @@ export default class RegistrationService {
         try {
             const res = await mail.send((message) => {
                 message.to(registration.email)
-                    .from('threshinghouseteam@gmail.com')
+                    .from('anbr@threshinghouse.org')
                     .subject('ANBR 2024, Registration')
                     .htmlView('emails/confirm_registration', registration)
             })
             console.log(res)
         } catch (e) {
+            console.log(e)
             let postData = {
                 from: "ThresHOUSE",
                 to: registration.mobile,
