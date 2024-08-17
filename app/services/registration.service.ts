@@ -1,7 +1,7 @@
 import { inject } from "@adonisjs/core";
 import Registration from "#models/registration";
 import mail from '@adonisjs/mail/services/main'
-import { RegistrationDocument } from "../requests/registration.js";
+import { RegistrationConfirmation, RegistrationDocument } from "../requests/registration.js";
 import { ApiResponse } from "../requests/api_response.js";
 import BibleStudyGroup from "#models/bible_study_group";
 import env from '#start/env'
@@ -22,6 +22,31 @@ export default class RegistrationService {
         })
         this.smsApiUrl = env.get('SMS_API')
         this.apiToken = this.encryption.decrypt(env.get('API_TOKEN')) as string
+    }
+    async getRegistration(regID: string): Promise<Registration | null> {
+        const registration = await Registration.findBy('registration_id', regID)
+        return registration
+    }
+    async confirm(regID: string): Promise<Registration | null> {
+        const registration = await this.getRegistration(regID)
+        if (registration) {
+            registration.confirmed = true
+            registration.save()
+        }
+        return registration
+    }
+    async confirmWithUrl(request : RegistrationConfirmation): Promise<Registration | null> {
+        const registration = await this.getRegistration(request.regId)
+        if (registration) {
+            registration.bible_study_group_name = request.bibleStudyGroup
+            registration.ministry_workshop_group_name = request.ministryWorkshopGroup
+            registration.confirmed = true
+            registration.save()
+        }
+        return registration
+    }
+    async generateRoomNumber(){
+        
     }
     async process(data: RegistrationDocument): Promise<ApiResponse> {
         const registrations = await Registration.findManyBy({ email: data.email, mobile: data.mobile })
@@ -73,7 +98,7 @@ export default class RegistrationService {
                 body: `Your ANBR Registration is Successful, 
                 your Registration ID ${registration.registration_id} 
                 and BibleStudy Group ${registration.biblestudy_id}`,
-                api_token : this.apiToken
+                api_token: this.apiToken
             }
             const res = await axios.post(this.smsApiUrl, postData);
             console.log(res)

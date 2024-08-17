@@ -19,3 +19,5 @@ router.get('/', async () => {
 router.post('/api/register/', [RegistersController, 'index'])
 
 router.post('/api/encrypt/', [RegistersController, 'encrypt'])
+
+router.get('/api/registrant/:id', [RegistersController, 'get'])

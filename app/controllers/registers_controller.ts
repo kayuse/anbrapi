@@ -29,6 +29,16 @@ export default class RegistersController {
             ctx.response.badRequest(error)
         }
     }
+    async get(ctx : HttpContext){
+        try {
+            const id = ctx.params.id;
+            const res = await this.service.getRegistration(id);
+            console.log(res)
+            return res
+        } catch (error) {
+            ctx.response.badRequest(error)
+        }
+    }
     async encrypt(ctx: HttpContext) {
         try {
             const data = ctx.request.all()

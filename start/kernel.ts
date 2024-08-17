@@ -8,8 +8,11 @@
 |
 */
 
+import TelegramBotService from '#services/telegram_bot_service'
+import { Encryption } from '@adonisjs/core/encryption'
 import router from '@adonisjs/core/services/router'
 import server from '@adonisjs/core/services/server'
+import { Bot } from 'grammy'
 
 /**
  * The error handler is used to convert an exception
@@ -39,3 +42,15 @@ router.use([() => import('@adonisjs/core/bodyparser_middleware')])
  * the routes or the routes group.
  */
 export const middleware = router.named({})
+
+// const encryption = new Encryption({
+//   secret: env.get('APP_KEY')
+// })
+// const bot = new Bot("6716883549:AAEOxIG-QWIxBXKMVhdimvkFBzyZRol_a5w"); // <-- put your bot token between the "" (https://t.me/BotFather)
+
+// // Reply to any message with "Hi there!".
+// bot.on("message", (ctx) => ctx.reply("Hi bro!"));
+
+// bot.start();
+const telegram = new TelegramBotService()
+telegram.initialize()

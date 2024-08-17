@@ -14,3 +14,8 @@ export type RegistrationDocument = {
     expectations: string
     invited_by: string
 }
+export type RegistrationConfirmation = {
+    regId: string
+    bibleStudyGroup: string,
+    ministryWorkshopGroup: string
+}

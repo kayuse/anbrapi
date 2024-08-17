@@ -60,6 +60,7 @@
     "@vinejs/vine": "^2.1.0",
     "axios": "^1.7.2",
     "edge.js": "^6.0.2",
+    "grammy": "^1.25.2",
     "luxon": "^3.4.4",
     "mysql2": "^3.10.1",
     "reflect-metadata": "^0.2.2"

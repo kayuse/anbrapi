@@ -48,8 +48,15 @@ export default class Registration extends BaseModel {
   declare workshop_id: string
 
   @column()
+  declare confirmed : boolean
+
+  @column()
   declare year: number
 
+  @column()
+  declare bible_study_group_name : string
+  @column()
+  declare ministry_workshop_group_name : string
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
