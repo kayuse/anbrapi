@@ -58,7 +58,8 @@ export default class TelegramBotService {
             }
             let data = "";
             Object.entries(reg.toJSON()).forEach(([key, value]) => {
-               data += (`Field: ${key}, Value: ${value}`);
+               data += (`${key}, Value: ${value}`);
+               data += "\n";
               });
             const response = `This is the details we found 
                              ${data}
