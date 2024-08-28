@@ -8,11 +8,10 @@
 |
 */
 
+import RegistrationService from '#services/registration.service'
 import TelegramBotService from '#services/telegram_bot_service'
-import { Encryption } from '@adonisjs/core/encryption'
 import router from '@adonisjs/core/services/router'
 import server from '@adonisjs/core/services/server'
-import { Bot } from 'grammy'
 
 /**
  * The error handler is used to convert an exception
@@ -52,5 +51,5 @@ export const middleware = router.named({})
 // bot.on("message", (ctx) => ctx.reply("Hi bro!"));
 
 // bot.start();
-const telegram = new TelegramBotService()
+const telegram = new TelegramBotService(new RegistrationService())
 telegram.initialize()
