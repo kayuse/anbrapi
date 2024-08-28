@@ -2,7 +2,7 @@
 
 import RegistrationService from "#services/registration.service";
 import { HttpContext } from "@adonisjs/core/http";
-import { RegistrationDocument } from "../requests/registration.js";
+import { RegistrationConfirmation, RegistrationDocument } from "../requests/registration.js";
 import { inject } from "@adonisjs/core";
 import env from '#start/env'
 
@@ -29,7 +29,15 @@ export default class RegistersController {
             ctx.response.badRequest(error)
         }
     }
-    async get(ctx : HttpContext){
+    async confirm(ctx: HttpContext) {
+        const data = ctx.request.all() as RegistrationConfirmation;
+        const response = this.service.confirmWithUrl(data)
+        if(response != null){
+            return response
+        }
+        return null;
+    }
+    async get(ctx: HttpContext) {
         try {
             const id = ctx.params.id;
             const res = await this.service.getRegistration(id);
@@ -42,8 +50,8 @@ export default class RegistersController {
     async encrypt(ctx: HttpContext) {
         try {
             const data = ctx.request.all()
-          const  response = {
-                data : this.encryption.encrypt(data.data)
+            const response = {
+                data: this.encryption.encrypt(data.data)
             }
             return response
 

@@ -1,10 +1,12 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
+import Room from './room.js'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
 export default class Registration extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
- 
+
   @column()
   declare firstname: string
 
@@ -12,11 +14,13 @@ export default class Registration extends BaseModel {
   declare lastname: string
 
   @column()
+  declare gender: string
+
+  @column()
   declare email: string
 
   @column()
   declare mobile: string
-
 
   @column()
   declare address: string
@@ -48,18 +52,35 @@ export default class Registration extends BaseModel {
   declare workshop_id: string
 
   @column()
-  declare confirmed : boolean
+  declare confirmed: boolean
 
   @column()
   declare year: number
 
   @column()
-  declare bible_study_group_name : string
+  declare bible_study_group_name: string
   @column()
-  declare ministry_workshop_group_name : string
+  declare ministry_workshop_group_name: string
+  @column()
+  declare room_number: number
+
+  @column()
+  declare age_group: string
+
+  @column()
+  declare bible_study_group_number: number
+
+  @column()
+
+  declare ministry_workshop_group_number: number
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+  @belongsTo(() => Room, {
+    foreignKey: 'room_number'
+  })
+  declare hostel: BelongsTo<typeof Room>
 }

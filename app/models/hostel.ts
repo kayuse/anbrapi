@@ -8,12 +8,6 @@ export default class Hostel extends BaseModel {
   @column()
   declare name : string
 
-  @column()
-  declare study_id : string
-
-  @column()
-  declare attendant : number
-
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

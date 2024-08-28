@@ -1,3 +1,5 @@
+import Registration from "#models/registration"
+
 export type RegistrationDocument = {
     firstname: string
     lastname: string,
@@ -16,6 +18,11 @@ export type RegistrationDocument = {
 }
 export type RegistrationConfirmation = {
     regId: string
-    bibleStudyGroup: string,
-    ministryWorkshopGroup: string
+    bibleStudyId: string,
+    ministryWorkshopId: string,
+    hasAccomodation: string
+}
+export type RegistrationResponse = {
+    registration : Registration
+    room : string
 }

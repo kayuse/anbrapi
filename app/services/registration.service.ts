@@ -1,13 +1,16 @@
 import { inject } from "@adonisjs/core";
 import Registration from "#models/registration";
 import mail from '@adonisjs/mail/services/main'
-import { RegistrationConfirmation, RegistrationDocument } from "../requests/registration.js";
+import { RegistrationConfirmation, RegistrationDocument, RegistrationResponse } from "../requests/registration.js";
 import { ApiResponse } from "../requests/api_response.js";
 import BibleStudyGroup from "#models/bible_study_group";
 import env from '#start/env'
 import axios from 'axios';
 
 import { Encryption } from '@adonisjs/core/encryption'
+import Hostel from "#models/hostel";
+import Floor from "#models/floor";
+import Room from "#models/room";
 
 
 @inject()
@@ -35,18 +38,68 @@ export default class RegistrationService {
         }
         return registration
     }
-    async confirmWithUrl(request : RegistrationConfirmation): Promise<Registration | null> {
+    async confirmWithUrl(request: RegistrationConfirmation): Promise<RegistrationResponse | null> {
         const registration = await this.getRegistration(request.regId)
-        if (registration) {
-            registration.bible_study_group_name = request.bibleStudyGroup
-            registration.ministry_workshop_group_name = request.ministryWorkshopGroup
+        const bibleStudyGroupNumber = this.getRandomInt(1, 20)
+        const workshopGroupNumber = this.getRandomInt(1, 20)
+        let room_number = 0
+        if (request.hasAccomodation == "false") {
+            room_number = await this.generateRoomNumber(registration);
+        }
+
+        if (registration?.confirmed == false) {
+            registration.bible_study_group_name = request.bibleStudyId
+            registration.ministry_workshop_group_name = request.ministryWorkshopId
+            registration.bible_study_group_number = bibleStudyGroupNumber;
+            registration.ministry_workshop_group_number = workshopGroupNumber;
+            registration.room_number = room_number
             registration.confirmed = true
             registration.save()
         }
-        return registration
+        if (registration != null) {
+            const response: RegistrationResponse = {
+                registration: registration,
+                room: await this.getRoomName(registration?.room_number)
+            }
+            return response
+        }
+        return null
     }
-    async generateRoomNumber(){
-        
+    getRandomInt(min: number, max: number): number {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    async getRoomName(roomNumber: number) {
+        const room = await Room.findOrFail(roomNumber)
+        const floor = await Floor.findOrFail(room.floor_id)
+        const hostel = await Hostel.findOrFail(floor.id)
+        return `${hostel.name}, ${floor.name} - ${room.name}`
+    }
+    async generateRoomNumber(registration: Registration | null): Promise<number> {
+        if (registration == null) {
+            return -1;
+        }
+        let room_number = null;
+        const rooms = await Room.query().whereHas('floor', (query) => {
+            return query.whereHas('hostel', (anotherQuery) => {
+                return anotherQuery.where('gender', registration.gender)
+            })
+        })
+        rooms.forEach(room => {
+            if (room.total > room.assigned) {
+                room_number = room.id
+            }
+        })
+        if (room_number == null) {
+            return -1;
+        }
+        const room = await Room.find(room_number)
+        if (room == null) {
+            return -1;
+        }
+        const assigned = room?.assigned == null ? 0 : room.assigned;
+        room.assigned = assigned + 1
+        room.save()
+        return room_number;
     }
     async process(data: RegistrationDocument): Promise<ApiResponse> {
         const registrations = await Registration.findManyBy({ email: data.email, mobile: data.mobile })
