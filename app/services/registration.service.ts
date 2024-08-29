@@ -53,18 +53,22 @@ export default class RegistrationService {
         }
 
         if (registration?.confirmed == false || registration.room_number <= 0) {
-            registration.bible_study_group_name = request.bibleStudyId
-            registration.ministry_workshop_group_name = request.ministryWorkshopId
+            if (registration.age_group != 'Below 18') {
+                registration.bible_study_group_name = request.bibleStudyId
+                registration.ministry_workshop_group_name = request.ministryWorkshopId
+                registration.room_number = room_number
+            }
+
             registration.bible_study_group_number = bibleStudyGroupNumber;
             registration.ministry_workshop_group_number = workshopGroupNumber;
-            registration.room_number = room_number
+
             registration.confirmed = true
             registration.save()
         }
         if (registration != null) {
             const response: RegistrationResponse = {
                 registration: registration,
-                room: await this.getRoomName(registration?.room_number)
+                room: await this.getRoomName(registration)
             }
             return response
         }
@@ -73,11 +77,14 @@ export default class RegistrationService {
     getRandomInt(min: number, max: number): number {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-    async getRoomName(roomNumber: number) {
-        if (roomNumber <= 0) {
+    async getRoomName(registration : Registration) {
+        if(registration.age_group == "Below 18"){
+            return "Kindly get your Room from the Registration Desk"
+        }
+        if (registration.room_number <= 0) {
             return "";
         }
-        const room = await Room.findOrFail(roomNumber)
+        const room = await Room.findOrFail(registration.room_number)
         const floor = await Floor.findOrFail(room.floor_id)
         const hostel = await Hostel.findOrFail(floor.hostel_id)
         return `${hostel.name}, ${floor.name} - ${room.name}`
@@ -105,8 +112,8 @@ export default class RegistrationService {
         const record = await RegDocRecord.findOrFail(1);
         const lastRecordId = record.lastRecordId
         let holdingRecord = lastRecordId;
-        for(let i = 0; i < records.length; i++){
-            if(i < lastRecordId){
+        for (let i = 0; i < records.length; i++) {
+            if (i < lastRecordId) {
                 continue
             }
             const registration = await Registration.create({
@@ -115,13 +122,13 @@ export default class RegistrationService {
                 mobile: records[i]['Phone Number(Whatsapp preferably)'],
                 address: records[i]['Residential address (with street name, landmark and nearest bus stop)'],
                 occupation: records[i]['Occupation'],
-                marital_status:  records[i]['Marital Status'],
+                marital_status: records[i]['Marital Status'],
                 country: records[i]['State and Country of residence'],
                 has_attended: records[i]['Have you attended a previous edition of ANBR'],
                 your_description: records[i]['How did you hear about this retreat?'],
                 needs_attention: records[i]['Is there a need for a special of comfort for you at the retreat (e.g allergies, health issues,  Pregnant/nursing mothers, disability?'],
                 nursing_mum: records[i]['Are you a toddler mom? If yes,  how many toddler are you coming with?'],
-                expectations: records[i]['What are your expectations from this year\'s Retreat?'].substring(0,200),
+                expectations: records[i]['What are your expectations from this year\'s Retreat?'].substring(0, 200),
                 gender: records[i]['Gender'].toLowerCase(),
                 biblestudy_id: records[i]['Age Group'],
             })
@@ -137,6 +144,9 @@ export default class RegistrationService {
     }
     async generateRoomNumber(registration: Registration | null): Promise<number> {
         if (registration == null) {
+            return -1;
+        }
+        if (registration.age_group == 'Below 18') {
             return -1;
         }
         let room_number = null;
@@ -162,7 +172,7 @@ export default class RegistrationService {
         room.save()
         return room_number;
     }
-    async sendMessage(registration : Registration){
+    async sendMessage(registration: Registration) {
         try {
             const res = await mail.send((message) => {
                 message.to(registration.email)
@@ -181,8 +191,8 @@ export default class RegistrationService {
             const a = await axios.post(this.smsApiUrl, postData);
         } catch (e) {
             console.log(e)
-            
-           // console.log(res)
+
+            // console.log(res)
         }
     }
     async process(data: RegistrationDocument): Promise<ApiResponse> {
