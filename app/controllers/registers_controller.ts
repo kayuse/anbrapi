@@ -9,8 +9,6 @@ import env from '#start/env'
 import { Encryption } from '@adonisjs/core/encryption'
 
 
-
-
 @inject()
 export default class RegistersController {
     protected encryption: Encryption
@@ -36,6 +34,14 @@ export default class RegistersController {
             return response
         }
         return null;
+    }
+    async sync(ctx : HttpContext){
+        try {
+            const res = this.service.sync()
+            return res
+        } catch (error) {
+            ctx.response.badRequest(error)
+        }
     }
     async get(ctx: HttpContext) {
         try {

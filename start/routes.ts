@@ -23,3 +23,4 @@ router.post('/api/encrypt/', [RegistersController, 'encrypt'])
 router.get('/api/registrant/:id', [RegistersController, 'get'])
 
 router.post('/api/registrant/confirm', [RegistersController, 'confirm'])
+router.post('api/sync', [RegistersController, 'sync']);
