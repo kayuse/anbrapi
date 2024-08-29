@@ -188,7 +188,7 @@ export default class RegistrationService {
                 your Registration ID ${registration.registration_id}`,
                 api_token: this.apiToken
             }
-            const a = await axios.post(this.smsApiUrl, postData);
+            await axios.post(this.smsApiUrl, postData);
         } catch (e) {
             console.log(e)
 
