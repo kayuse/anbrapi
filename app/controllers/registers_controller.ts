@@ -86,6 +86,7 @@ export default class RegistersController {
                 { id: 'bible_study_group_name', title: 'Bible Study Group Name' },
                 { id: 'ministry_workshop_group_name', title: 'Minsitry Workshop Group Name' },
                 { id: 'age_group', title: 'Age Group' },
+                { id: 'confirmed', title: 'Registration Confirmed' },
 
             ],
         })
