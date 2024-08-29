@@ -6,7 +6,6 @@ import { RegistrationConfirmation, RegistrationDocument } from "../requests/regi
 import { inject } from "@adonisjs/core";
 import env from '#start/env'
 import path from 'path'
-import fs from 'fs'
 import { Encryption } from '@adonisjs/core/encryption'
 import Registration from "#models/registration";
 import createCsvWriter from 'csv-writer'

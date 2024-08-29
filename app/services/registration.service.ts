@@ -7,7 +7,6 @@ import BibleStudyGroup from "#models/bible_study_group";
 import env from '#start/env'
 import axios from 'axios';
 import { parse } from 'csv-parse/sync';
-
 import { Encryption } from '@adonisjs/core/encryption'
 import Hostel from "#models/hostel";
 import Floor from "#models/floor";
@@ -135,7 +134,6 @@ export default class RegistrationService {
             registration.save()
             await this.sendMessage(registration)
             holdingRecord = i;
-            //break;
         }
         record.lastRecordId = holdingRecord
         record.save()
