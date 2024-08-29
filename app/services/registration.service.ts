@@ -43,11 +43,14 @@ export default class RegistrationService {
         const bibleStudyGroupNumber = this.getRandomInt(1, 20)
         const workshopGroupNumber = this.getRandomInt(1, 20)
         let room_number = 0
+        if(registration == null){
+            return null;
+        }
         if (request.hasAccomodation == "false") {
             room_number = await this.generateRoomNumber(registration);
         }
-
-        if (registration?.confirmed == false) {
+       
+        if (registration?.confirmed == false || registration.room_number <= 0) {
             registration.bible_study_group_name = request.bibleStudyId
             registration.ministry_workshop_group_name = request.ministryWorkshopId
             registration.bible_study_group_number = bibleStudyGroupNumber;
@@ -69,9 +72,12 @@ export default class RegistrationService {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
     async getRoomName(roomNumber: number) {
+        if(roomNumber <= 0){
+            return "";
+        }
         const room = await Room.findOrFail(roomNumber)
         const floor = await Floor.findOrFail(room.floor_id)
-        const hostel = await Hostel.findOrFail(floor.id)
+        const hostel = await Hostel.findOrFail(floor.hostel_id)
         return `${hostel.name}, ${floor.name} - ${room.name}`
     }
     async generateRoomNumber(registration: Registration | null): Promise<number> {
