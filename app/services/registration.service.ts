@@ -104,7 +104,6 @@ export default class RegistrationService {
         });
         return records;
     }
-
     async sync() {
         const url = 'https://docs.google.com/spreadsheets/d/1Porbv6LI0ul4iFS5FTlAA5DUTMQU4_7U6LbLMjqfGIE/export?format=csv'
         const content = await this.fetchUrlContent(url);
@@ -130,7 +129,7 @@ export default class RegistrationService {
                 nursing_mum: records[i]['Are you a toddler mom? If yes,  how many toddler are you coming with?'],
                 expectations: records[i]['What are your expectations from this year\'s Retreat?'].substring(0, 200),
                 gender: records[i]['Gender'].toLowerCase(),
-                biblestudy_id: records[i]['Age Group'],
+                age_group: records[i]['Age Group'],
             })
             registration.registration_id = `THREG${registration.id}`
             registration.save()

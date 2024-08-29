@@ -24,3 +24,4 @@ router.get('/api/registrant/:id', [RegistersController, 'get'])
 
 router.post('/api/registrant/confirm', [RegistersController, 'confirm'])
 router.post('api/sync', [RegistersController, 'sync']);
+router.get('/download', [RegistersController, 'downloadCsv'])
