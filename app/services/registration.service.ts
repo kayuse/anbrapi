@@ -132,7 +132,7 @@ export default class RegistrationService {
             })
             registration.registration_id = `THREG${registration.id}`
             registration.save()
-            await this.sendMessage(registration)
+            // await this.sendMessage(registration)
             holdingRecord = i;
         }
         record.lastRecordId = holdingRecord
